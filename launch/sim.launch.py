@@ -10,7 +10,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.actions import AppendEnvironmentVariable, ExecuteProcess, TimerAction, OpaqueFunction
 
-package_name = 'anthropomorphic-arm'
+package_name = 'Anthropomorphic-Arm'
 
 def spawn_blocks(context, *args, **kwargs):
 
