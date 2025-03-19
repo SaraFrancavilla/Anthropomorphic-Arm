@@ -10,7 +10,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.actions import AppendEnvironmentVariable, ExecuteProcess, TimerAction, OpaqueFunction
 
-package_name = 'Anthropomorphic-Arm'
+package_name = 'ros2_ur5_interface'
 
 def spawn_blocks(context, *args, **kwargs):
 
