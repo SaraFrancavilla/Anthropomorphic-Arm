@@ -76,9 +76,22 @@ private:
 
     void joint_state_callback(const sensor_msgs::msg::JointState::SharedPtr msg)
     {
+        //Without taking into account object dimension
+        // if (msg->position.size() > 7) // Ensure valid indices
+        // {
+        //     start_config_ = {msg->position[5], msg->position[7]};
+        // }
+
+        //Stopping when resistance is detected
         if (msg->position.size() > 7) // Ensure valid indices
         {
-            start_config_ = {msg->position[5], msg->position[7]};
+            auto new_config = std::vector<double>{msg->position[5], msg->position[7]};
+            if (new_config == start_config_) // No change in position
+            {
+                RCLCPP_INFO(this->get_logger(), "Gripper motion stopped due to resistance.");
+                // Optionally cancel the action here
+            }
+            start_config_ = new_config;
         }
     }
 
