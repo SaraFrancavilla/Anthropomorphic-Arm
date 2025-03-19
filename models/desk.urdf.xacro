@@ -1,0 +1,49 @@
+<?xml version="1.0" ?>
+<robot name="desk" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Static property -->
+  <link name="desk">
+    <!-- Inertial -->
+    <inertial>
+      <origin xyz="0.5 0.4 0.435" rpy="0 0 0" />
+      <mass value="10" />
+      <inertia ixx="0.1" ixy="0" ixz="0" iyy="0.1" iyz="0" izz="0.1" />
+    </inertial>
+
+    <!-- Base collision -->
+    <collision name="desk_base">
+      <origin xyz="0.5 0.4 0.435" rpy="0 0 0" />
+      <geometry>
+        <box size="1 0.8 0.87" />
+      </geometry>
+    </collision>
+
+    <!-- Box collision -->
+    <collision name="desk_box">
+      <origin xyz="0.5 0.08 0.95" rpy="0 0 0" />
+      <geometry>
+        <box size="1 0.15 0.15" />
+      </geometry>
+    </collision>
+
+    <!-- Back collision -->
+    <collision name="desk_back">
+      <origin xyz="0.5 -0.02 1.35" rpy="1.57 0 0" />
+      <geometry>
+        <box size="1 1.0 0.04" />
+      </geometry>
+    </collision>
+
+    <!-- Visual -->
+    <visual name="visual">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file://$(find ros2_ur5_interface)/models/meshes/desk.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="grey_material">
+        <color rgba="0.5 0.5 0.5 1.0"/> <!-- Grey color, fully opaque -->
+      </material>
+    </visual>
+  </link>
+
+</robot>

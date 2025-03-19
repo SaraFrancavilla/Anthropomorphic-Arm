@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+<sdf version="1.4">
+	<model name="camera">
+		<static>true</static>
+
+		<link name="camera_rgb_frame">
+			<visual name="camera_rgb_visual">
+				<geometry>
+					<box>
+						<size>0.1 0.1 0.1</size>
+					</box>
+				</geometry>
+				<material>
+					<ambient>0.1 0.1 0.1 1</ambient>
+					<diffuse>0.2 0.2 0.2 1</diffuse>
+					<specular>0 0 0 0</specular>
+					<emissive>0 0 0 1</emissive>
+				</material>
+			</visual>
+
+			<pose>0 0 0 0 0 0</pose>
+			<sensor name="camera" type="rgbd_camera">
+			<always_on>true</always_on>
+			<visualize>true</visualize>
+			<update_rate>10</update_rate>
+			<topic>camera/image_raw</topic>
+			<gz_frame_id>camera_rgb_frame</gz_frame_id>
+			<camera name="zed_camera">
+				<camera_info_topic>camera/camera_info</camera_info_topic>
+				<horizontal_fov>1.02974</horizontal_fov>
+				<image>
+					<width>640</width>
+					<height>360</height>
+					<format>R8G8B8</format>
+				</image>
+				<clip>
+					<near>0.1</near>
+					<far>5</far>
+				</clip>
+			</camera>
+			</sensor>
+		</link>   
+
+	</model>
+</sdf>
+

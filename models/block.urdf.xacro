@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<robot name="block" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:arg name="block_number" default="1" />
+  <xacro:arg name="block_type" default="X1-Y1-Z2" />
+  <xacro:macro name="block" params="block_number block_type">
+
+    <!-- Parameters for reusability -->
+    <xacro:property name="mesh_path" value="$(find ros2_ur5_interface)/models/meshes/${block_type}.stl" />
+    <xacro:property name="mass" value="0.01" />
+    <xacro:property name="ixx" value="3.604e-6" />
+    <xacro:property name="iyy" value="3.604e-6" />
+    <xacro:property name="izz" value="1.602e-6" />
+    <xacro:property name="color" value="0.4 0.4 0.9 1" />
+    
+    <!-- Link Definition -->
+    <link name="block${block_number}">
+      <!-- Inertial Properties -->
+      <inertial>
+        <origin xyz="0 0 0.0285" rpy="0 0 0"/>
+        <mass value="${mass}" />
+        <inertia 
+          ixx="${ixx}" 
+          ixy="0" 
+          ixz="0" 
+          iyy="${iyy}" 
+          iyz="0" 
+          izz="${izz}" />
+      </inertial>
+
+      <!-- Visual Properties -->
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="file://${mesh_path}" scale="1 1 1" />
+        </geometry>
+        <material name="color">
+          <color rgba="${color}" />
+        </material>
+      </visual>
+
+      <!-- Collision Properties -->
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <!-- <box size="0.031 0.031 0.057" /> -->
+          <mesh filename="file://${mesh_path}" scale="1 1 1" />
+        </geometry>
+      </collision>
+    </link>
+
+  </xacro:macro>
+  <xacro:block block_number="$(arg block_number)" block_type="$(arg block_type)" />
+
+</robot>

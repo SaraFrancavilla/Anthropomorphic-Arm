@@ -1,0 +1,224 @@
+<?xml version="1.0"?>
+<robot name="soft_robotics_gripper" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+  <material name="Grey">
+    <color rgba="0.2 0.2 0.2 1" />
+  </material>
+  <material name="Blue">
+    <color rgba="0 0 1 1" />
+  </material>
+
+  <xacro:macro name="soft_robotics_gripper" params="prefix parent *origin">
+
+    <joint name="${prefix}soft_robotics_gripper_base_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <parent link="${parent}" />
+      <child link="${prefix}soft_robotics_gripper_base_link" />
+    </joint>
+
+    <link name="${prefix}soft_robotics_gripper_base_link">
+      <visual>
+        <origin rpy="0 0 0" xyz="0 0 -0.0095" />
+        <geometry>
+          <mesh filename="file://$(find ros2_ur5_interface)/models/meshes/base.stl"/>
+        </geometry>
+        <material name="Grey" />
+      </visual>
+      <collision>
+        <origin rpy="0 0 0" xyz="0 0 -0.0095" />
+        <geometry>
+          <mesh filename="file://$(find ros2_ur5_interface)/models/meshes/base.stl"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="2.073e-05   1.45286e-03  -1.1049e-03" rpy="0 0 0" />
+        <mass value="0.168" />
+        <inertia ixx="6.69695624e-05" ixy="5.21511788e-09" ixz="-2.74383009e-08" iyy="7.85088161e-05" iyz="5.41105193e-07" izz="1.41819717e-04" />
+      </inertial>
+    </link>
+
+    <joint name="${prefix}soft_robotics_gripper_left_finger_joint1" type="revolute">
+      <origin xyz="0 -0.028 0.09" rpy=" 0 0 0" />
+      <parent link="${prefix}soft_robotics_gripper_base_link" />
+      <child link="${prefix}soft_robotics_left_finger_link1" />
+      <limit effort="1" velocity="1" lower="-0.35" upper="0.35" />
+      <axis xyz="1 0 0"/>
+    </joint>
+
+    <link name="${prefix}soft_robotics_left_finger_link1">
+      <visual>
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <geometry>
+          <mesh filename="file://$(find ros2_ur5_interface)/models/meshes/link1.stl"/>
+        </geometry>
+        <material name="Blue" />
+      </visual>
+      <collision>
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <geometry>
+          <mesh filename="file://$(find ros2_ur5_interface)/models/meshes/link1.stl"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="2.073e-05   1.45286e-03  -1.1049e-03" rpy="0 0 0" />
+        <mass value="0.168" />
+        <inertia ixx="6.69695624e-05" ixy="5.21511788e-09" ixz="-2.74383009e-08" iyy="7.85088161e-05" iyz="5.41105193e-07" izz="1.41819717e-04" />
+      </inertial>
+    </link>
+
+    <joint name="${prefix}soft_robotics_gripper_right_finger_joint1" type="revolute">
+      <origin xyz="0 0.028 0.09" rpy=" 0 0 ${-pi}" />
+      <parent link="${prefix}soft_robotics_gripper_base_link" />
+      <child link="${prefix}soft_robotics_right_finger_link1" />
+      <limit effort="1" velocity="1" lower="-0.35" upper="0.35" />
+      <axis xyz="1 0 0"/>
+    </joint>
+
+    <link name="${prefix}soft_robotics_right_finger_link1">
+      <visual>
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <geometry>
+          <mesh filename="file://$(find ros2_ur5_interface)/models/meshes/link1.stl"/>
+        </geometry>
+        <material name="Blue" />
+      </visual>
+      <collision>
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <geometry>
+          <mesh filename="file://$(find ros2_ur5_interface)/models/meshes/link1.stl"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="2.073e-05   1.45286e-03  -1.1049e-03" rpy="0 0 0" />
+        <mass value="0.168" />
+        <inertia ixx="6.69695624e-05" ixy="5.21511788e-09" ixz="-2.74383009e-08" iyy="7.85088161e-05" iyz="5.41105193e-07" izz="1.41819717e-04" />
+      </inertial>
+    </link>
+
+    <joint name="${prefix}soft_robotics_gripper_left_finger_joint2" type="fixed">
+      <origin xyz="0 0.009 0.042" rpy=" 0 0 0" />
+      <parent link="${prefix}soft_robotics_left_finger_link1" />
+      <child link="${prefix}soft_robotics_left_finger_link2" />
+    </joint>
+
+    <link name="${prefix}soft_robotics_left_finger_link2">
+      <visual>
+        <geometry>
+          <mesh filename="file://$(find ros2_ur5_interface)/models/meshes/link2.stl"/>
+        </geometry>
+        <material name="Blue" />
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="file://$(find ros2_ur5_interface)/models/meshes/link2.stl"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="2.073e-05   1.45286e-03  -1.1049e-03" rpy="0 0 0" />
+        <mass value="0.168" />
+        <inertia ixx="6.69695624e-05" ixy="5.21511788e-09" ixz="-2.74383009e-08" iyy="7.85088161e-05" iyz="5.41105193e-07" izz="1.41819717e-04" />
+      </inertial>
+    </link>
+
+    <joint name="${prefix}soft_robotics_gripper_right_finger_joint2" type="fixed">
+      <origin xyz="0 0.009 0.042" rpy=" 0 0 0" />
+      <parent link="${prefix}soft_robotics_right_finger_link1" />
+      <child link="${prefix}soft_robotics_right_finger_link2" />
+    </joint>
+
+    <link name="${prefix}soft_robotics_right_finger_link2">
+      <visual>
+        <geometry>
+          <mesh filename="file://$(find ros2_ur5_interface)/models/meshes/link2.stl"/>
+        </geometry>
+        <material name="Blue" />
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="file://$(find ros2_ur5_interface)/models/meshes/link2.stl"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="2.073e-05   1.45286e-03  -1.1049e-03" rpy="0 0 0" />
+        <mass value="0.168" />
+        <inertia ixx="6.69695624e-05" ixy="5.21511788e-09" ixz="-2.74383009e-08" iyy="7.85088161e-05" iyz="5.41105193e-07" izz="1.41819717e-04" />
+      </inertial>
+    </link>
+  
+    <gazebo reference="${prefix}soft_robotics_gripper_base_link">
+        <material>Gazebo/Grey</material>
+    </gazebo>
+    <gazebo reference="${prefix}soft_robotics_left_finger_link1">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+    <gazebo reference="${prefix}soft_robotics_right_finger_link1">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+      <gazebo reference="${prefix}soft_robotics_left_finger_link2">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+    <gazebo reference="${prefix}soft_robotics_right_finger_link2">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+
+    <ros2_control name="gripper" type="system">
+        <hardware>
+          <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+        </hardware>
+        <joint name="${prefix}soft_robotics_gripper_left_finger_joint1">
+          <command_interface name="position"/>
+          <command_interface name="velocity"/>
+          <state_interface name="position">
+            <!-- initial position for the mock system and simulation -->
+            <param name="initial_value">0.0</param>
+          </state_interface>
+          <state_interface name="velocity">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+          <state_interface name="effort">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+        </joint>
+
+        <joint name="${prefix}soft_robotics_gripper_right_finger_joint1">
+          <command_interface name="position"/>
+          <command_interface name="velocity"/>
+          <state_interface name="position">
+            <!-- initial position for the mock system and simulation -->
+            <param name="initial_value">0.0</param>
+          </state_interface>
+          <state_interface name="velocity">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+          <state_interface name="effort">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+        </joint>
+    </ros2_control>
+
+
+    <!-- TRANSMISSION -->
+    <transmission name="${prefix}right_finger_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${prefix}soft_robotics_gripper_left_finger_joint1">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${prefix}right_finger_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <transmission name="${prefix}left_finger_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${prefix}soft_robotics_gripper_right_finger_joint1">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${prefix}shoulder_lift_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+    
+    
+  </xacro:macro>
+</robot>
