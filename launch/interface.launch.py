@@ -7,7 +7,7 @@ from launch_ros.substitutions import FindPackageShare
 from ament_index_python.packages import get_package_share_directory
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
-package_name = 'anthropomorphic-arm'
+package_name = 'Anthropomorphic-Arm'
 
 def generate_launch_description():
     # Declare the robot IP address argument
