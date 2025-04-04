@@ -20,7 +20,7 @@ package_name = 'ros2_ur5_interface'
 #const for random generation
 table_height = 0.88
 max_blocks = 8  # Maximum number of blocks to spawn
-distance_threshold = 0.2  # Distance threshold for block placement
+distance_threshold = 0.15  # Distance threshold for block placement
 max_x = 0.49     #Dividing the table in halves
 max_y = 0.79    #Width of the table
 
