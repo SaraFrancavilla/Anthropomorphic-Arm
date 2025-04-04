@@ -102,8 +102,8 @@ def spawn_blocks(context, *args, **kwargs):
             arguments=[
                 '-name', f"block{block_number}",
                 '-file', sdf_file,
-                '-x', str(0.35 + i*0.4), #str(0.405 + 0.2 * int(block_number)),  # Adjust position for each block
-                '-y', str(-0.3 + i*0.6),#'0.58',
+                '-x', str(0.1 + i*0.4), #str(0.405 + 0.2 * int(block_number)),  # Adjust position for each block
+                '-y', str(0.1 + i*0.6),#'0.58',
                 '-z', '0.88',
             ],
             output='screen',
