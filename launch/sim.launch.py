@@ -20,7 +20,13 @@ def spawn_blocks(context, *args, **kwargs):
     block_types = [blocks[0], blocks[0]]  # Define block types for each block
     instances_cmds = []
 
+    #ELIMINA
+    i = 0
+
     for block_number, block_type in zip(block_numbers, block_types):
+
+        #ELIMINA
+        i+=1
 
         # Paths
         xacro_file = os.path.join(get_package_share_directory(package_name), 'models', 'block.urdf.xacro')
@@ -96,8 +102,8 @@ def spawn_blocks(context, *args, **kwargs):
             arguments=[
                 '-name', f"block{block_number}",
                 '-file', sdf_file,
-                '-x', str(0.405 + 0.2 * int(block_number)),  # Adjust position for each block
-                '-y', '0.58',
+                '-x', str(0.35 + i*0.4), #str(0.405 + 0.2 * int(block_number)),  # Adjust position for each block
+                '-y', str(-0.3 + i*0.6),#'0.58',
                 '-z', '0.88',
             ],
             output='screen',
