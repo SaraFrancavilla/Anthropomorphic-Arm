@@ -10,9 +10,164 @@ from ament_index_python.packages import get_package_share_directory
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.actions import AppendEnvironmentVariable, ExecuteProcess, TimerAction, OpaqueFunction
 
+#For random generation
+from numpy import sqrt
+import random
+
+
 package_name = 'ros2_ur5_interface'
 
+#const for random generation
+table_height = 0.88
+max_blocks = 8  # Maximum number of blocks to spawn
+distance_threshold = 0.2  # Distance threshold for block placement
+max_x = 0.5     #Dividing the table in halves
+max_y = 0.8    #Width of the table
+
+
+def blocks_position():
+        
+    blocks = ["X1-Y1-Z2", "X1-Y2-Z2", "X1-Y4-Z2", "X1-Y2-Z1", "X1-Y3-Z2-FILLET", "X2-Y2-Z2-FILLET", "X1-Y2-Z2-CHAMFER", "X1-Y3-Z2", "X2-Y2-Z2", "X1-Y2-Z2-TWINFILLET", "X1-Y4-Z1"]
+
+    block_types = []    #[(block_name, x, y), .., ()]
+
+    for i in range(max_blocks):
+
+        new_block = True
+
+        index = random.randint(0, len(blocks)-1)
+
+        block_types.append({"type": blocks[index],            # Placeholder for x and y positions
+                          "x": 0, 
+                          "y": 0})  # Initialize a new dictionary for each block
+
+        print(f"Block {i+1}: {blocks[index]}")
+
+        blocks.remove(blocks[index])  # Remove the block from the list to avoid duplicates
+
+        #Generating blocks and positions
+        if i == 0:
+
+            block_types[i]["x"] = random.uniform(0, max_x)
+            block_types[i]["y"] = random.uniform(0, max_y)
+
+            print(f"Block {i+1} position: ({block_types[i]['x']}, {block_types[i]['y']})")
+
+        else:
+
+            while new_block==True:
+
+                block_types[i]["x"] = random.uniform(0, max_x)
+                block_types[i]["y"] = random.uniform(0, max_y)  
+
+                for j in range(i):
+                    if sqrt((block_types[i]["x"] - block_types[j]["x"])**2 + (block_types[i]["y"] - block_types[j]["y"])**2) < distance_threshold:
+                        break
+                    if j == i-1:
+                        new_block = False
+                        break
+
+                print(f"Block {i+1} position: ({block_types[i]['x']}, {block_types[i]['y']})")
+
+    return block_types
+
+
 def spawn_blocks(context, *args, **kwargs):
+
+    instances_cmds = []
+    blocks_positions = blocks_position()
+
+    for block_number, block_position in enumerate(blocks_positions):
+        block_type = block_position["type"]
+        x = block_position["x"]
+        y = block_position["y"]
+
+        # Paths TODO
+        xacro_file = os.path.join(get_package_share_directory(package_name), 'models', 'block.urdf.xacro')
+        urdf_file = os.path.join(get_package_share_directory(package_name), f'models/block_{block_number}.urdf')
+        sdf_file = os.path.join(get_package_share_directory(package_name), f'models/block_{block_number}.sdf')
+
+        # Generate URDF from Xacro
+        try:
+            xacro_command = [
+                FindExecutable(name="xacro").perform(context),
+                xacro_file,
+                f"block_name:={block_number}",
+                f"block_type:={block_type}",
+            ]
+            urdf_output = subprocess.check_output(xacro_command, text=True)
+            with open(urdf_file, 'w') as urdf_fp:
+                urdf_fp.write(urdf_output)
+
+        except subprocess.CalledProcessError as e:
+            raise RuntimeError(f"Error generating URDF for block {block_number}: {e}")
+
+        # Convert URDF to SDF
+        try:
+            sdf_command = [
+                FindExecutable(name="gz").perform(context),
+                "sdf",
+                "-p",
+                urdf_file,
+            ]
+            sdf_output = subprocess.check_output(sdf_command, text=True)
+            # Modify SDF to include the IMU sensor
+            sdf_lines = sdf_output.splitlines()
+            sensor_block = f"""
+            <plugin
+                filename="ignition-gazebo-pose-publisher-system"
+                name="ignition::gazebo::systems::PosePublisher">
+                <publish_model_pose>true</publish_model_pose>
+                <publish_nested_model_pose>true</publish_nested_model_pose>
+                <use_pose_vector_msg>true</use_pose_vector_msg>
+                <update_frequency>100.0</update_frequency>
+            </plugin>
+            """
+            # Append the sensor to the appropriate location
+            insert_index = next(
+                (i for i, line in enumerate(sdf_lines) if "</model>" in line), len(sdf_lines) - 1
+            )
+            sdf_lines.insert(insert_index, sensor_block)
+            modified_sdf_output = "\n".join(sdf_lines)
+            with open(sdf_file, 'w') as sdf_fp:
+                sdf_fp.write(modified_sdf_output)
+
+        except subprocess.CalledProcessError as e:
+            raise RuntimeError(f"Error converting URDF to SDF for block {block_number}: {e}")
+
+        print(f"Successfully generated URDF for block {block_number} at {urdf_file}")
+        print(f"Successfully generated SDF for block {block_number} at {sdf_file}")
+
+        # Block robot state publisher node
+        block_robot_state_publisher_node = Node(
+            package='robot_state_publisher',
+            executable='robot_state_publisher',
+            output='screen',
+            namespace=f'block_{block_number}',
+            name='robot_state_publisher',
+            parameters=[{'robot_description': urdf_output}]
+        )
+        instances_cmds.append(block_robot_state_publisher_node)
+
+        # Spawn block node
+        spawn_block = Node(
+            package='ros_gz_sim',
+            executable='create',
+            arguments=[
+                '-name', f"block{block_number}",
+                '-file', sdf_file,
+                '-x', str(x),  # Adjust position for each block
+                '-y', str(y),  # Adjust position for each block
+                '-z', str(table_height),  # Height of the table
+            ],
+            output='screen',
+        )
+        instances_cmds.append(spawn_block)
+
+    return instances_cmds
+
+
+'''def spawn_blocks(context, *args, **kwargs):
 
     blocks = ["X1-Y1-Z2", "X1-Y2-Z2", "X1-Y4-Z2", "X1-Y2-Z1", "X1-Y3-Z2-FILLET", "X2-Y2-Z2-FILLET", "X1-Y2-Z2-CHAMFER", "X1-Y3-Z2", "X2-Y2-Z2", "X1-Y2-Z2-TWINFILLET", "X1-Y4-Z1"]
 
@@ -111,7 +266,7 @@ def spawn_blocks(context, *args, **kwargs):
         instances_cmds.append(spawn_block)
 
     return instances_cmds
-
+'''
 
 def generate_launch_description():
     declared_arguments = []
