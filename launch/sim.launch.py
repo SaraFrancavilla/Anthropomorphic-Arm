@@ -57,8 +57,8 @@ def blocks_position():
 
             while new_block==True:
 
-                block_types[i]["x"] = random.uniform(0.01, max_x)
-                block_types[i]["y"] = random.uniform(0.01, max_y)  
+                block_types[i]["x"] = random.uniform(0.05, max_x)
+                block_types[i]["y"] = random.uniform(0.05, max_y)  
 
                 for j in range(i):
                     if sqrt((block_types[i]["x"] - block_types[j]["x"])**2 + (block_types[i]["y"] - block_types[j]["y"])**2) < distance_threshold:
