@@ -16,8 +16,8 @@ def spawn_blocks(context, *args, **kwargs):
 
     blocks = ["X1-Y1-Z2", "X1-Y2-Z2", "X1-Y4-Z2", "X1-Y2-Z1", "X1-Y3-Z2-FILLET", "X2-Y2-Z2-FILLET", "X1-Y2-Z2-CHAMFER", "X1-Y3-Z2", "X2-Y2-Z2", "X1-Y2-Z2-TWINFILLET", "X1-Y4-Z1"]
 
-    block_numbers = ["1", "2"]  # Define block numbers for two blocks
-    block_types = [blocks[0], blocks[0]]  # Define block types for each block
+    block_numbers = ["1", "2", "3", "4"]  # Define block numbers for two blocks
+    block_types = [blocks[0], blocks[1], blocks[2], blocks[3]]  # Define block types for each block
     instances_cmds = []
 
     #ELIMINA
@@ -102,7 +102,7 @@ def spawn_blocks(context, *args, **kwargs):
             arguments=[
                 '-name', f"block{block_number}",
                 '-file', sdf_file,
-                '-x', str(0.405 + 0.2 * int(block_number)),  # Adjust position for each block
+                '-x', str(1.0 * int(block_number)), #str(0.405 + 0.2 * int(block_number)),  # Adjust position for each block
                 '-y', '0.58',
                 '-z', '0.88',
             ],
