@@ -21,8 +21,8 @@ package_name = 'ros2_ur5_interface'
 table_height = 0.88
 max_blocks = 8  # Maximum number of blocks to spawn
 distance_threshold = 0.2  # Distance threshold for block placement
-max_x = 0.5     #Dividing the table in halves
-max_y = 0.8    #Width of the table
+max_x = 0.49     #Dividing the table in halves
+max_y = 0.79    #Width of the table
 
 
 def blocks_position():
@@ -57,8 +57,8 @@ def blocks_position():
 
             while new_block==True:
 
-                block_types[i]["x"] = random.uniform(0, max_x)
-                block_types[i]["y"] = random.uniform(0, max_y)  
+                block_types[i]["x"] = random.uniform(0.01, max_x)
+                block_types[i]["y"] = random.uniform(0.01, max_y)  
 
                 for j in range(i):
                     if sqrt((block_types[i]["x"] - block_types[j]["x"])**2 + (block_types[i]["y"] - block_types[j]["y"])**2) < distance_threshold:
