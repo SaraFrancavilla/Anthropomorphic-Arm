@@ -1,12 +1,3 @@
-# UR5 Simulation Repository
-
-This repository provides **auxiliary resources** to help students and robotics enthusiasts visualize simulations and create new nodes for their projects. It complements the [**pla10/ros2_ur5_interface**](https://hub.docker.com/r/pla10/ros2_ur5_interface) Docker image, which delivers a pre-configured ROS 2 Jazzy environment tailored for the **UR5 manipulator robot**.
-This repo is included, at its latest release, in the /home/ubuntu/ros2_ws of the [**pla10/ros2_ur5_interface**](https://hub.docker.com/r/pla10/ros2_ur5_interface) Docker image.
-
-The resources in this repository were developed for the **"Fundamentals of Robotics" course** at the **University of Trento** and aim to streamline project development and learning.
-
----
-
 ## Features
 - **Simulation visualization**: Tools to interact with the UR5 simulation in a graphical environment.
 - **Example ROS 2 nodes**: Includes a sample node for trajectory publication to get you started.
@@ -177,12 +168,6 @@ ros2 launch ros2_ur5_interface interface.launch.py robot_ip:=<robot_ip>
 <img src="images/ur5_demo1.gif" width="45%" style="display: inline-block; margin-right: 5px;" /> 
 <img src="images/ur5_demo2.gif" width="45%" style="display: inline-block; margin-left: 5px;" /> 
 </p>
-
----
-
-## Contributions
-Students and contributors are welcome to improve this repository by adding new nodes, launch files, or other auxiliary tools. Feel free to open issues or submit pull requests.
-
 ---
 
 ## License
