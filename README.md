@@ -1,3 +1,8 @@
+## To do 
+### Anthropomorphic arm
+
+### Vision
+
 ## Features
 - **Simulation visualization**: Tools to interact with the UR5 simulation in a graphical environment.
 - **Example ROS 2 nodes**: Includes a sample node for trajectory publication to get you started.
