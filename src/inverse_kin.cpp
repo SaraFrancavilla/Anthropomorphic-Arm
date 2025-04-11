@@ -8,7 +8,7 @@
 #include <cmath>
 #include <iomanip>
 
-
+#include "inverse_kin.hpp"
 #include "ur5_globals.hpp"
 
 //creating a server that passes the final positions to the inverse kin
