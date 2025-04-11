@@ -149,6 +149,7 @@ private:
        //Modify this function to publish a position on the topic end_effector_position
         //In the generate_trajectory_segment read and write position from topic joint_angles
 
+        std::vector<double> angle_config;
         // Subscribe to the topic joint_angles
         auto joint_angles_subscription = this->create_subscription<sensor_msgs::msg::JointState>(
             "joint_angles", 10, [this](const sensor_msgs::msg::JointState::SharedPtr msg) {
