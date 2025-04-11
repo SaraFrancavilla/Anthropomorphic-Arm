@@ -146,14 +146,47 @@ private:
 
     void prepare_trajectories()
     {
-        // Define the trajectories
-        // Trajectory 1
+       //Modify this function to publish a position on the topic end_effector_position
+        //In the generate_trajectory_segment read and write position from topic joint_angles
+
+        // Subscribe to the topic joint_angles
+        auto joint_angles_subscription = this->create_subscription<sensor_msgs::msg::JointState>(
+            "joint_angles", 10, [this](const sensor_msgs::msg::JointState::SharedPtr msg) {
+                RCLCPP_INFO(this->get_logger(), "Received joint angles");
+                // Save the received joint angles in a variable
+                if (msg->position.size() == joint_names_.size()) {
+                    angle_config = msg->position;
+                } else {
+                    RCLCPP_WARN(this->get_logger(), "Received joint angles size mismatch");
+                }
+            });
+
+        // Publish to the topic end_effector_position a random position
+        auto end_effector_position_publisher = this->create_publisher<sensor_msgs::msg::JointState>("end_effector_position", 10);
+        sensor_msgs::msg::JointState random_position_msg;
+        random_position_msg.name = joint_names_;
+        random_position_msg.position = {0.5, -0.5, 0.3, -0.3, 0.2, -0.2}; // Example random values
+        end_effector_position_publisher->publish(random_position_msg);
+        RCLCPP_INFO(this->get_logger(), "Published random end effector position");
+
+        //Trajectory 1
         trajectory_msgs::msg::JointTrajectory traj1;
         traj1 = generate_trajectory_segment(
             start_config_,
-            {-1.41, -0.96, -1.8, -1.96, -1.60, 0.0},
+            angle_config,
             10);
         trajectories_.push_back(traj1);
+
+
+
+        // Define the trajectories
+        // Trajectory 1
+        // trajectory_msgs::msg::JointTrajectory traj1;
+        // traj1 = generate_trajectory_segment(
+        //     start_config_,
+        //     {-1.41, -0.96, -1.8, -1.96, -1.60, 0.0},
+        //     10);
+        // trajectories_.push_back(traj1);
 
         // Trajectory 2
         trajectory_msgs::msg::JointTrajectory traj2;
