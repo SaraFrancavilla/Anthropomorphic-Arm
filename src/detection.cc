@@ -3,9 +3,12 @@
 #include <cv_bridge/cv_bridge.h>
 #include <opencv2/opencv.hpp>
 #include <torch/script.h>
+#include <torch/torch.h>
 #include <std_msgs/msg/float32_multi_array.hpp>
 #include <sensor_msgs/image_encodings.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <memory>
+#include <exception>
 class DetectionNode : public rclcpp::Node {
     public:
         DetectionNode() : Node("yolo_detection_node") {
@@ -20,12 +23,12 @@ class DetectionNode : public rclcpp::Node {
             }
             subscription = this->create_subscription<sensor_msgs::msg::Image>(
                 "/camera/color/image_raw",
-                10,
+                8,
                 std::bind(&DetectionNode::image_callback, this) //check if camera driver is published on this topic. double-check topic name via "ro2 topic list"
             );
 
-            publisher = this->create_publisher<std_msgs::msg::Float32MultiArray>("/inference_result", 10);
-            // publisher = this->create_publisher<vision_msgs::msg::Detection2DArray>("/inference_result", 10);
+            publisher = this->create_publisher<std_msgs::msg::Float32MultiArray>("/inference_result", 8);
+            // publisher = this->create_publisher<vision_msgs::msg::Detection2DArray>("/inference_result", 8);
             RCLCPP_INFO(this->get_logger(), "Detection Node initialised.");
         }
 
@@ -51,7 +54,7 @@ class DetectionNode : public rclcpp::Node {
                 .permute({0, 3, 1, 2})
                 .to(torch::kCPU);
             auto output = model.forward({input_tensor}).toTensor(); //or to Tuple if the model outputs multiple tensors
-            std::cout<<"Output from model :"<< output << std::endl;
+            RCLCPP_INFO(this->get_logger(), "Output from model :%s", output.sizes().vec().data());
             auto num_detections = output.size(0);
             if (num_detections == 0) {
                 RCLCPP_INFO(this->get_logger(), "No detections found.");

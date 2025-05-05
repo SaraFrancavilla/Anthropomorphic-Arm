@@ -2,6 +2,10 @@
 #include <sensor_msgs/msg/image.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <std_msgs/msg/float32_multi_array.hpp>
+#include <vision_msgs/msg/detection3_d_array.hpp>
+#include <geometry_msgs/msg/pose.hpp>
+#include <geometry_msgs/msg/pose_array.hpp>
+#include <sensor_msgs/point_cloud2_iterator.hpp>
 
 
 class CameraPoseNode : public Node{
@@ -9,10 +13,10 @@ class CameraPoseNode : public Node{
     public:
         CameraPoseNode(): Node("pose_from_camera_node"){
             subscription_pixel = this->create_subscription<std_msgs::msg::Float32MultiArray>(
-                "/camera/image_raw", 10, std::bind(&CameraPoseNode::image_callback, this, std::placeholders::_1));
+                "/inference_result", 8, std::bind(&CameraPoseNode::image_callback, this, std::placeholders::_1));
             subscription_cloud = this->create_subscription<sensor_msgs::msg::PointCloud2>(
-                "/camera/depth/points", 10, std::bind(&CameraPoseNode::cloud_callback, this, std::placeholders::_1));
-            publisher = this->create_publisher<vision_msgs::msg::Detection3DArray>("/camera/pose", 10);
+                "/camera/depth/points", 8, std::bind(&CameraPoseNode::cloud_callback, this, std::placeholders::_1));
+            publisher = this->create_publisher<vision_msgs::msg::Detection3DArray>("/inference_3d", 8);
             current_cloud = nullptr;
         }
 
