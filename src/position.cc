@@ -6,7 +6,10 @@
 #include <geometry_msgs/msg/pose.hpp>
 #include <geometry_msgs/msg/pose_array.hpp>
 #include <sensor_msgs/point_cloud2_iterator.hpp>
-
+#include <memory>
+#include <cmath>
+#include <string>
+#include <vector>
 
 class CameraPoseNode : public Node{
     todo("check if pixel coordinates match between the color image and point cloud");
@@ -54,19 +57,19 @@ class CameraPoseNode : public Node{
                 }
                 float index_1d = v * width + u;
 
-                sensor_msgs::PointCloud2ConstIterator<float> it_x(*current_cloud, "x");
-                sensor_msgs::PointCloud2ConstIterator<float> it_y(*current_cloud, "y");
-                sensor_msgs::PointCloud2ConstIterator<float> it_z(*current_cloud, "z");
+                sensor_msgs::PointCloud2ConstIterator<float> iter_x(*current_cloud, "x");
+                sensor_msgs::PointCloud2ConstIterator<float> iter_y(*current_cloud, "y");
+                sensor_msgs::PointCloud2ConstIterator<float> iter_z(*current_cloud, "z");
 
-                std::advance(it_x, index_1d);
-                std::advance(it_y, index_1d);
-                std::advance(it_z, index_1d);
+                std::advance(iter_x, index_1d);
+                std::advance(iter_y, index_1d);
+                std::advance(iter_z, index_1d);
 
-                float point_x = *it_x;
-                float point_y = *it_y;
-                float point_z = *it_z;
+                float x = *iter_x;
+                float y = *iter_y;
+                float z = *iter_z;
 
-                if(!std::isfinite(point_x) || !std::isfinite(point_y) || !std::isfinite(point_z)){
+                if(!std::isfinite(x) || !std::isfinite(y) || !std::isfinite(z)){
                     RCLCPP_WARN(this->get_logger(), "Invalid point cloud data at index_1d: %d", index_1d);
                     continue;
                 }
@@ -79,15 +82,15 @@ class CameraPoseNode : public Node{
                 pose.orientation.w = 1.0;
     
                 vision_msgs::msg::ObjectHypothesisWithPose object_hypothesis;
-                object_hypothesis.hypothesis.class_id = std::to_string(block.class_id);
-                object_hypothesis.hypothesis.score = block.confidence;
+                object_hypothesis.hypothesis.class_id = std::to_string(static_cast<int>(id));
+                object_hypothesis.hypothesis.score = confidence;
                 object_hypothesis.pose.pose = pose;
     
                 detect.results.push_back(object_hypothesis);
                 detect.bbox.center = pose;
     
-                publish_positions.detections.push_back(detection);
-                RCLCPP_INFO(this->get_logger(), "Pose ID: %f, Confidence: %f, Position: (%f, %f, %f)", id, confidence, point_x, point_y, point_z);
+                publish_positions.detections.push_back(detect);
+                RCLCPP_INFO(this->get_logger(), "Pose ID: %f, Confidence: %f, Position: (%f, %f, %f)", id, confidence, x, y, z);
             }
             publisher->publish(publish_positions);
 
@@ -97,3 +100,9 @@ class CameraPoseNode : public Node{
         rclcpp::Publisher<geometry_msgs::msg::PoseArray>::SharedPtr publisher;
         sensor_msgs::msg::PointCloud2::SharedPtr current_cloud;
 };
+int main(int argc, char** argv) {
+    rclcpp::init(argc, argv);
+    rclcpp::spin(std::make_shared<CameraPoseNode>());
+    rclcpp::shutdown();
+    return 0;
+}
