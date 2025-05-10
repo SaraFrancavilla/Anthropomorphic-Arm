@@ -2,14 +2,11 @@
 #include <sensor_msgs/msg/image.hpp>
 #include <std_msgs/msg/float32_multi_array.hpp>
 #include <sensor_msgs/image_encodings.hpp>
-
 #include <cv_bridge/cv_bridge.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-
 #include <torch/script.h>
 #include <torch/torch.h>
-
 #include <memory>
 #include <string>
 #include <vector>
@@ -91,7 +88,7 @@ private:
         RCLCPP_INFO(this->get_logger(), "Published %d detections.", num_detections);
     }
 
-    static constexpr const char* model_path = "best_models/yolo11n_0dropout.pt";
+    static constexpr const char* model_path = "model/yolo11n_0dropout.pt";
     rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscription;
     rclcpp::Publisher<std_msgs::msg::Float32MultiArray>::SharedPtr publisher;
     torch::jit::script::Module model;
