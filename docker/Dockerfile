@@ -88,6 +88,17 @@ RUN apt-get update -q && \
     rosdep init && \
     rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+        libopencv-dev \
+        ros-${ROS_DISTRO}-cv-bridge \
+        ros-${ROS_DISTRO}-vision-msgs \
+        ros-${ROS_DISTRO}-image-transport \
+        && \
+    apt-get autoclean && \
+    apt-get autoremove && \
+    rm -rf /var/lib/apt/lists/*
+
 RUN rosdep update
 
 # Enable apt-get completion after running `apt-get update` in the container
