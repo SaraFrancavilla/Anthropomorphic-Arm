@@ -43,7 +43,7 @@ include_directories(
 add_executable(publish_trajectory_node src/publish_trajectory_node.cpp)
 add_executable(gripper_service src/gripper_service.cpp)
 add_executable(yolo_detection_node src/detection.cc)
-add_executable(pose_from_camera_node src/positionn.cc)
+add_executable(pose_from_camera_node src/position.cc)
 
 ament_target_dependencies(publish_trajectory_node
   rclcpp
